@@ -1,0 +1,64 @@
+﻿<Window x:Class="Options.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Options"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <local:ColorToConverter x:Key="Clr"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox x:Name="lstOVR" ItemsSource="{Binding OVRS}" MouseDoubleClick="ovr_doubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name, StringFormat=OVR {0}}" Foreground="{Binding Options.LineColor, Converter={StaticResource Clr}}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button VerticalAlignment="Bottom" Content="Add" Click="AddOVR_Click"/>
+
+        <ListBox Grid.Column="1">
+            <ListBoxItem MouseDoubleClick="lines_DoubleClick" DataContext="{Binding ElementName=lstOVR, Path=SelectedItem}" Content="{Binding Options.LineOptions.LineColor}" Foreground="{Binding Options.LineOptions.LineColor, Converter={StaticResource Clr}}"/>
+            <ListBoxItem MouseDoubleClick="texts_DoubleClick" DataContext="{Binding ElementName=lstOVR, Path=SelectedItem}" Content="{Binding Options.TextOptions.LineColor}" Foreground="{Binding Options.TextOptions.LineColor, Converter={StaticResource Clr}}"/>
+        </ListBox>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ListBox MouseDoubleClick="texts_DoubleClick" x:Name="lstTexts" Grid.Row="0" ItemsSource="{Binding ElementName=lstOVR, Path=SelectedItem.Texts}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" Foreground="{Binding Options.LineColor, Converter={StaticResource Clr}}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox MouseDoubleClick="line_DoubleClick" x:Name="lstLines" Grid.Row="1" ItemsSource="{Binding ElementName=lstOVR, Path=SelectedItem.Lines}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" Foreground="{Binding Options.LineColor, Converter={StaticResource Clr}}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <StackPanel Grid.Column="3">
+            <TextBlock MouseDown="text_DoubleCLick" Grid.Column="2" DataContext="{Binding ElementName=lstTexts, Path=SelectedItem}" Text="{Binding Name}" Foreground="{Binding Options.LineColor, Converter={StaticResource Clr}}"/>
+            <TextBlock MouseDown="line_DoubleClick" Grid.Column="2" DataContext="{Binding ElementName=lstLines, Path=SelectedItem}" Text="{Binding Name}" Foreground="{Binding Options.LineColor, Converter={StaticResource Clr}}"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
